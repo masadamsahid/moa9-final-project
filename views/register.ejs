@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Register | Book App</title>
+  <%- include('assets/bootstrap/css') %>
+</head>
+<body>
+  <%- include('components/header') %>
+  
+  <main class="container-xl px-2 py-4">
+    <div class="d-flex flex-column align-items-center w-100">
+      <h3>Register</h3>
+      <div class="card">
+        <div class="card-body">
+          <form action="">
+            <div class="d-flex flex-column gap-2">
+              <input name="email" class="form-control" type="text" placeholder="Email Address" required>
+              <input name="name" class="form-control" type="email" placeholder="Full Name (4-32 letters)" required>
+              <input name="password" class="form-control" type="password" placeholder="Password (Min. 8)" required>
+              <button type="submit" class="btn btn-success fw-semibold">Register</button>
+            </div>
+          </form>
+        </div>
+        
+        <div class="card-footer text-center">
+          <p class="m-0" style="font-size: 10px;">Already registered?
+            <a href="/login" class="link link-success">Login</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+</body>
+</html>
