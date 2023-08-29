@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Book App</title>
+  <%- include('assets/bootstrap/css') %>
+</head>
+<body>
+  <%- include('components/header') %>
+  <main class="container-xl px-2 py-4">
+    <div class="d-flex flex-column align-items-center gap-2 w-100">
+      <h1 class="fw-bolder">
+        <%= book.name %>
+      </h1>
+      <p class="fst-italic text-center" style="font-size: 12px">
+        <span>
+          Authored by <%= book.author %>
+        </span>&nbsp;|&nbsp;
+        <span>
+          Published by <%= book.publisher %>
+        </span><br>
+        <span class="text-muted" style="font-size: 11px">
+          Published on <%= moment(book.published_at).format("MMMM DD, YYYY") %>
+        </span><br>
+      </p>
+      
+      <div class="fs-5 fw-semibold font-monospace d-flex flex-column gap-4">
+        <img
+          style="max-height: 350px;"
+          src="<%= book.img_url %>"
+          alt="<%= book.name %>"
+          title="<%= book.name %>"
+        >
+        <p class="m-0 p-0 text-center">
+          Price: $ <%= book.price %>
+        </p>
+      </div>
+      
+      <div>
+        <h1 class="m-0 p-0 fw-bolder font-monospace">
+          &#8220;
+        </h1>
+        <blockquote class="m-0 p-0" style="max-width: 650px;">
+          <%= book.desc %>
+        </blockquote>
+        <h1 class="m-0 p-0 fw-bolder font-monospace text-end">
+          &#8221;
+        </h1>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

@@ -10,5 +10,57 @@
 </head>
 <body>
   <%- include('components/header') %>
+  <main class="container-xl px-2 py-4">
+    <div class="d-flex flex-column align-items-center w-100">
+      <h1 class="fw-bolder">Books List</h1>
+      
+      <table class="table table-hover table-striped table-bordered border-black">
+        <thead>
+        <tr class="text-center bg-success">
+          <% ["ID", "Name", "Author", "Desc", "Price", "Publisher", "Published"].forEach((col) => { %>
+          <th class="bg-transparent">
+            <%= col %>
+          </th>
+          <% }) %>
+        </tr>
+        </thead>
+        
+        <tbody>
+        <% if (books.length <= 0) { %>
+          <tr>
+            <td colspan="7" class="text-center">No Data</td>
+          </tr>
+        <% } else { %>
+          <% books.forEach((book) => { %>
+            <tr class="align-middle">
+              <td class="text-center"><%= book.id %></td>
+              <td>
+                <a
+                  class="link-success"
+                  href="/books/<%= book.id %>"
+                >
+                  <%= book.name %>
+                </a>
+              </td>
+              <td><%= book.author %></td>
+              <td style="max-width: 250px;">
+                <%= book.desc.length <= 100 ? book.desc : `${book.desc.slice(0, 100)}...` %>
+              </td>
+              <td class="text-center">$ <%= book.price %></td>
+              <td><%= book.publisher %></td>
+              <td title="<%= moment(book.published_at).format("DD MMMM, YYYY") %>">
+                <%= moment(book.published_at).fromNow() %>
+              </td>
+            </tr>
+          <% }) %>
+        <% } %>
+        </tbody>
+      </table>
+      
+      <h5>
+        Length: <%= books.length %>
+      </h5>
+    </div>
+  </main>
 </body>
 </html>
