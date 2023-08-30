@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title><%= book.name %> - Details | Book App</title>
+  <%- include('assets/bootstrap/css') %>
+</head>
+<body>
+  <%- include('components/header') %>
+  
+  <main class="container-xl px-2 py-4">
+    <form action="/books/<%= book.id %>/delete" method="POST" class="card mx-auto" style="max-width: 500px">
+      <div class="card-header">
+        <h3>Delete Book</h3>
+      </div>
+      
+      <div class="card-body">
+        <p class="m-0">
+          Are you sure deleting <b><%= book.name %></b>?
+        </p>
+      </div>
+      
+      <div class="card-footer">
+        <div class="ms-auto" style="width: fit-content">
+          <a class="text-decoration-none" href="/books/<%= book.id %>">
+            <button type="button" class="btn btn-sm btn-outline-success border-0">
+              Cancel
+            </button>
+          </a>
+          <button type="submit" class="btn btn-sm btn-outline-danger border-0">
+            Yes, Delete
+          </button>
+        </div>
+      </div>
+    </form>
+  </main>
+  
+  <%- include('assets/bootstrap/js') %>
+</body>
+</html>

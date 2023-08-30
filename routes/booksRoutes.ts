@@ -1,6 +1,7 @@
 import { Router } from "express";
 import prisma from "../db/prisma";
 import { bodyEmptyStrToNull } from "../middlewares/requestMiddlewares";
+import BookControllers from "../controllers/booksControllers";
 
 
 type Book = {
@@ -50,148 +51,19 @@ type Book = {
 
 const booksRoutes = Router();
 
-booksRoutes.post('/', bodyEmptyStrToNull, async (req, res) => {
-  const body = req.body;
-  
-  console.log({ body });
-  
-  if (!body.title) return res.status(400).send("Name must be provided");
-  if (body.price !== null) {
-    body.price = Number(body.price);
-    if (isNaN(body.price)) return res.status(400).send("Price must be a number");
-  }
-  if (body.author !== null) {
-    body.author = Number(body.author);
-    if (isNaN(body.author)) return res.status(400).send("Invalid author");
-    const author = await prisma.user.findFirst({
-      where: { id: body.author },
-    });
-    if (!author) return res.status(400).send("Invalid author");
-  }
-  
-  if (body?.published_at === null) delete body.published_at;
-  else body.published_at = new Date(body.published_at);
-  
-  const newBook = await prisma.book.create({
-    data: {
-      name: body.title,
-      desc: body.desc,
-      price: body.price,
-      publisher: body.publisher,
-      author_id: body.author,
-      img_url: body['img-url'],
-      published_at: body?.published_at,
-    },
-  });
+const booksControllers =  new BookControllers();
 
-  if (!newBook) return res.status(500).send("Failed creating new book");
+// API
+booksRoutes.post('/', bodyEmptyStrToNull, booksControllers.createNewBook);
+booksRoutes.post('/:id/update', bodyEmptyStrToNull, booksControllers.updateBook);
+booksRoutes.post('/:id/delete', booksControllers.deleteBook);
 
-  return res.redirect(`/books/${newBook.id}`);
-});
-
-booksRoutes.post('/:id/update', bodyEmptyStrToNull, async (req, res) => {
-  const id= Number(req.params.id);
-  
-  const book = await prisma.book.findFirst({
-    where: { id },
-  });
-  
-  if (!book) return res.status(404).send("Target book not found");
-  
-  const body = req.body;
-  
-  console.log({ body });
-  
-  if (!body.title) return res.status(400).send("Name must be provided");
-  if (body.price !== null) {
-    body.price = Number(body.price);
-    if (isNaN(body.price)) return res.status(400).send("New Price must be a number");
-  }
-  if (body.author !== null) {
-    body.author = Number(body.author);
-    if (isNaN(body.author)) return res.status(400).send("Invalid new author");
-    const author = await prisma.user.findFirst({
-      where: { id: body.author },
-    });
-    if (!author) return res.status(400).send("Invalid new author");
-  }
-  
-  if (body?.published_at === null) delete body.published_at;
-  else body.published_at = new Date(body.published_at);
-  
-  const updatedBook = await prisma.book.update({
-    where: { id },
-    data: {
-      name: body.title,
-      desc: body.desc,
-      price: body.price,
-      publisher: body.publisher,
-      author_id: body.author,
-      img_url: body['img-url'],
-      published_at: body?.published_at,
-    },
-  });
-
-  if (!updatedBook) return res.status(500).send("Failed updating book");
-
-  return res.redirect(`/books/${updatedBook.id}`);
-});
-
-booksRoutes.get('/', async (req, res) => {
-  const books = await prisma.book.findMany({
-    include: {
-      author: {
-        select: { id: true, full_name: true },
-      },
-    },
-  });
-  return res.render("books", { books });
-});
-
-
-booksRoutes.get('/add', async (req, res) => {
-  const authors = await prisma.user.findMany();
-  
-  return res.render("add-book", { authors });
-});
-
-booksRoutes.get('/:id', async (req, res) => {
-  const id = Number(req.params.id);
-  const book = await prisma.book.findFirst({
-    where: { id },
-    include: {
-      author: {
-        select: { id: true, full_name: true },
-      },
-    }
-  });
-  
-  console.log({ book })
-  
-  if (!book) return res.status(404).send("Not Found!");
-  
-  return res.render("book-details", { book });
-});
-
-booksRoutes.get('/:id/update', async (req, res) => {
-  const id = Number(req.params.id);
-  const book = await prisma.book.findFirst({
-    where: { id },
-    include: {
-      author: {
-        select: { id: true, full_name: true },
-      },
-    }
-  });
-  
-  console.log({ book })
-  
-  if (!book) return res.status(404).send("Not Found!");
-  
-  const authors = await prisma.user.findMany();
-  
-  return res.render("update-book", { book, authors });
-});
+// PAGES
+booksRoutes.get('/', booksControllers.getBooksListPage);
+booksRoutes.get('/add', booksControllers.getCreateNewBookPage);
+booksRoutes.get('/:id', booksControllers.getBookDetailsPage);
+booksRoutes.get('/:id/update', booksControllers.getBookUpdatePage);
+booksRoutes.get('/:id/delete', booksControllers.getBookDeletePage);
 
 
 export default booksRoutes;
