@@ -20,11 +20,11 @@
       </div>
       <h1 class="fw-bolder">Books List</h1>
       
-      <table class="table table-hover table-striped table-bordered border-black">
+      <table class="table table-hover table-striped table-bordered border-dark-subtle">
         <thead>
-        <tr class="text-center bg-success">
+        <tr class="text-center bg-success border-dark">
           <% ["ID", "Name", "Author", "Desc", "Price", "Publisher", "Published", ""].forEach((col) => { %>
-          <th class="bg-transparent">
+          <th class="bg-transparent <%= col === "Published" ? "border-end-0" : col === "" ? "border-start-0" : "" %>">
             <%= col %>
           </th>
           <% }) %>
@@ -40,7 +40,7 @@
           <% books.forEach((book) => { %>
             <tr class="align-middle">
               <td class="text-center"><%= book.id %></td>
-              <td>
+              <td style="max-width: 200px;">
                 <a
                   class="link-success custom-link"
                   href="/books/<%= book.id %>"
@@ -58,10 +58,10 @@
               </td>
               <td class="text-center">$ <%= book.price %></td>
               <td><%= book.publisher || "Unknown" %></td>
-              <td title="<%= moment(book.published_at).format("DD MMMM, YYYY") %>">
+              <td class="border-end-0" title="<%= moment(book.published_at).format("DD MMMM, YYYY") %>">
                 <%= moment(book.published_at).fromNow() %>
               </td>
-              <td>
+              <td class="border-start-0">
                 <div class="dropdown">
                   <div class="p-2 text-center" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     &vellip;
@@ -80,7 +80,7 @@
       </table>
       
       <h5>
-        Length: <%= books.length %>
+        Total: <%= books.length %> books
       </h5>
     </div>
   </main>
