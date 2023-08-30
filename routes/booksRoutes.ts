@@ -59,7 +59,7 @@ const bookOwnerOnly: Handler = (req, res, next) => {
   const selfUser: any = req.user;
   const id = Number(req.params.id);
   
-  if (selfUser.id !== id) return res.redirect(`/books/${id}`);
+  if (selfUser.id !== id) return res.redirect(`/unauthorized`);
   
   return next();
 }

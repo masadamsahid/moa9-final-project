@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Book App</title>
+  <%- include('assets/bootstrap/css') %>
+  <%- include('assets/style') %>
+</head>
+<body>
+  <%- include('components/header') %>
+  <main class="container-xl px-2 py-4">
+    <div class="d-flex flex-column align-items-center w-100">
+      
+      <h1 class="fw-bolder">Unauthorized</h1>
+      <h3 class="fw-semibold">You don't have access for this action</h3>
+      
+      <div class="w-100" style="max-height: 400px; max-width: 400px;">
+        <%- include('assets/unauthorized-svg') %>
+      </div>
+      
+      <a href="/" class="text-decoration-none btn btn-success">
+        Back to Home
+      </a>
+      
+    </div>
+  </main>
+  
+  <%- include('assets/bootstrap/js') %>
+</body>
+</html>

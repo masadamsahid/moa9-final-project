@@ -8,6 +8,7 @@ dotenv.config();
 
 const authRoutes = Router();
 
+// Auth pages
 authRoutes.get('/register', (req, res) => {
   const selfUser = req.user;
   console.log({ selfUser });
@@ -24,6 +25,14 @@ authRoutes.get('/login', (req, res) => {
   return res.render("login", { selfUser });
 });
 
+authRoutes.get('/unauthorized', (req, res) => {
+  const selfUser = req.user;
+  
+  return res.render("unauthorized", { selfUser });
+});
+
+
+// auth functionalities
 authRoutes.post("/register", passport.authenticate("local-register", {
   successRedirect: "/books",
   failureRedirect: "/register",
