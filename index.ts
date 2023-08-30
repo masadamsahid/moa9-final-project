@@ -3,8 +3,13 @@ import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import path from "path";
 import moment from "moment";
+import dotenv from "dotenv";
 import booksRoutes from "./routes/booksRoutes";
 import authRoutes from "./routes/authRoutes";
+
+dotenv.config();
+
+const PORT = Number(process.env.PORT) || 3000;
 
 const app = express();
 
@@ -35,8 +40,8 @@ app.get('/', (req, res) => {
 });
 
 
-app.listen(3000, () => {
-  console.log(`App is running on port 3000`);
+app.listen(PORT, () => {
+  console.log(`App is running on port ${PORT}`);
 });
 
 
