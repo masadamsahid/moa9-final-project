@@ -5,7 +5,13 @@
   <div class="d-flex flex-grow-1 justify-content-center align-items-center">
   </div>
   <div class="ms-auto">
+    <%
+      if (!selfUser) {
+    %>
     <a href="/register" class="btn btn-outline-success">Register</a>
     <a href="/login" class="btn btn-success">Login</a>
+    <% } else { %>
+    <a href="/logout" class="btn btn-outline-success">Logout</a>
+    <% } %>
   </div>
 </nav>

@@ -110,13 +110,22 @@ class BookControllers {
         },
       },
     });
-    return res.render("books", { books });
+    
+    const selfUser = req.user;
+    
+    console.log({ selfUser });
+    
+    return res.render("books", { books, selfUser });
   }
   
   getCreateNewBookPage: Handler = async (req, res) => {
     const authors = await prisma.user.findMany();
     
-    return res.render("add-book", { authors });
+    const selfUser = req.user;
+    
+    console.log({ selfUser });
+    
+    return res.render("add-book", { authors, selfUser });
   }
   
   getBookDetailsPage: Handler =  async (req, res) => {
@@ -134,7 +143,11 @@ class BookControllers {
     
     if (!book) return res.status(404).send("Not Found!");
     
-    return res.render("book-details", { book });
+    const selfUser = req.user;
+    
+    console.log({ selfUser });
+    
+    return res.render("book-details", { book, selfUser });
   }
   
   getBookUpdatePage: Handler = async (req, res) => {
@@ -154,7 +167,11 @@ class BookControllers {
     
     const authors = await prisma.user.findMany();
     
-    return res.render("update-book", { book, authors });
+    const selfUser = req.user;
+    
+    console.log({ selfUser });
+    
+    return res.render("update-book", { book, authors, selfUser });
   }
   
   getBookDeletePage: Handler = async (req, res) => {
@@ -172,7 +189,11 @@ class BookControllers {
     
     if (!book) return res.status(404).send("Not Found!");
     
-    return res.render("delete-book", { book });
+    const selfUser = req.user;
+    
+    console.log({ selfUser });
+    
+    return res.render("delete-book", { book, selfUser });
   }
   
 }

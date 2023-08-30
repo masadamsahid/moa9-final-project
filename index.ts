@@ -4,12 +4,19 @@ import cookieParser from "cookie-parser";
 import path from "path";
 import moment from "moment";
 import dotenv from "dotenv";
+import passport from "passport";
 import booksRoutes from "./routes/booksRoutes";
 import authRoutes from "./routes/authRoutes";
+import passportConfig from "./config/passport";
+import session from "express-session";
 
 dotenv.config();
 
 const PORT = Number(process.env.PORT) || 3000;
+
+const a = passport;
+
+passportConfig(passport);
 
 const app = express();
 
@@ -28,6 +35,16 @@ app.set('view engine', 'ejs');
 
 app.locals.moment = moment;
 app.locals.DEFAULT_BOOK_IMG = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRK3nKjzHS9kqCAsWrF8UrA6Jjcn9tjP6XGjw&usqp=CAU";
+
+// Passport & Session
+app.use(session({
+  secret: 'my$3cRet',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { maxAge: 60 * 60 * 1000 }
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 
 
 // Routes
