@@ -23,7 +23,7 @@
       <table class="table table-hover table-striped table-bordered border-black">
         <thead>
         <tr class="text-center bg-success">
-          <% ["ID", "Name", "Author", "Desc", "Price", "Publisher", "Published"].forEach((col) => { %>
+          <% ["ID", "Name", "Author", "Desc", "Price", "Publisher", "Published", ""].forEach((col) => { %>
           <th class="bg-transparent">
             <%= col %>
           </th>
@@ -61,6 +61,18 @@
               <td title="<%= moment(book.published_at).format("DD MMMM, YYYY") %>">
                 <%= moment(book.published_at).fromNow() %>
               </td>
+              <td>
+                <div class="dropdown">
+                  <div class="p-2 text-center" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    &vellip;
+                  </div>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="/books/<%= book.id %>">View</a></li>
+                    <li><a class="dropdown-item" href="/books/<%= book.id %>/update">Update</a></li>
+                    <li><a class="dropdown-item" href="/books/<%= book.id %>/delete">Delete</a></li>
+                  </ul>
+                </div>
+              </td>
             </tr>
           <% }) %>
         <% } %>
@@ -72,5 +84,7 @@
       </h5>
     </div>
   </main>
+  
+  <%- include('assets/bootstrap/js') %>
 </body>
 </html>

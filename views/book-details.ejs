@@ -12,6 +12,16 @@
   <%- include('components/header') %>
   <main class="container-xl px-2 py-4">
     <div class="d-flex flex-column align-items-center gap-2 w-100">
+      <div class="dropdown ms-auto">
+        <div class="p-2 text-center fw-bold" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          &vellip;
+        </div>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="/books/<%= book.id %>">View</a></li>
+          <li><a class="dropdown-item" href="/books/<%= book.id %>/update">Update</a></li>
+          <li><a class="dropdown-item" href="/books/<%= book.id %>/delete">Delete</a></li>
+        </ul>
+      </div>
       <h1 class="fw-bolder">
         <%= book.name %>
       </h1>
@@ -54,7 +64,7 @@
         </h1>
         <blockquote
           class="m-0 p-2 <%= book.desc ? "" : "text-center text-muted bg-dark-subtle fst-italic w-100%" %>"
-          style="min-width: fit-content;<%= book.desc ? '' : `font-size:9px;` %>"
+          style="min-width: 200px;<%= book.desc ? '' : `font-size:9px;` %>"
         >
           <%= book.desc || "No Description" %>
         </blockquote>
@@ -64,5 +74,7 @@
       </div>
     </div>
   </main>
+  
+  <%- include('assets/bootstrap/js') %>
 </body>
 </html>
