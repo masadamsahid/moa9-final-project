@@ -56,6 +56,33 @@ const passportConfig = (passport: PassportStatic) => {
     }
   ));
   
+  passport.use("local-login", new LocalStrategy(
+    {
+      usernameField: "email",
+      passwordField: "password",
+      passReqToCallback: true,
+    },
+    (req, username, password, done) => {
+      prisma.user.findUnique({
+        where: { email: username },
+      }).then(async (user) => {
+        if (!user) return done("User not found", false, {
+          message: "User not found"
+        });
+        
+        const compare = await bcrypt.compare(password, user.password);
+        
+        if (!compare) return done("Wrong credentials", false, {
+          message: "Wrong credentials",
+        });
+        
+        return done(null, user);
+      }).catch((err) => {
+        return done(err);
+      });
+    }
+  ));
+  
 }
 
 export default passportConfig;

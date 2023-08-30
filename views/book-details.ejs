@@ -12,16 +12,17 @@
   <%- include('components/header') %>
   <main class="container-xl px-2 py-4">
     <div class="d-flex flex-column align-items-center gap-2 w-100">
-      <div class="dropdown ms-auto">
-        <div class="p-2 text-center fw-bold" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-          &vellip;
+      <% if (selfUser && selfUser.id === book.id) { %>
+        <div class="dropdown ms-auto">
+          <div class="p-2 text-center fw-bold" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            &hellip;
+          </div>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/books/<%= book.id %>/update">Update</a></li>
+            <li><a class="dropdown-item" href="/books/<%= book.id %>/delete">Delete</a></li>
+          </ul>
         </div>
-        <ul class="dropdown-menu">
-          <li><a class="dropdown-item" href="/books/<%= book.id %>">View</a></li>
-          <li><a class="dropdown-item" href="/books/<%= book.id %>/update">Update</a></li>
-          <li><a class="dropdown-item" href="/books/<%= book.id %>/delete">Delete</a></li>
-        </ul>
-      </div>
+      <% } %>
       <h1 class="fw-bolder">
         <%= book.name %>
       </h1>

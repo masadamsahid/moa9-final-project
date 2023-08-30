@@ -1,7 +1,8 @@
-import { Router } from "express";
+import { Handler, Router } from "express";
 import prisma from "../db/prisma";
 import { bodyEmptyStrToNull } from "../middlewares/requestMiddlewares";
 import BookControllers from "../controllers/booksControllers";
+import AuthMiddleware from "../middlewares/authMiddleware";
 
 
 type Book = {
@@ -51,19 +52,29 @@ type Book = {
 
 const booksRoutes = Router();
 
+const authMiddleware = new AuthMiddleware();
 const booksControllers =  new BookControllers();
 
+const bookOwnerOnly: Handler = (req, res, next) => {
+  const selfUser: any = req.user;
+  const id = Number(req.params.id);
+  
+  if (selfUser.id !== id) return res.redirect(`/books/${id}`);
+  
+  return next();
+}
+
 // API
-booksRoutes.post('/', bodyEmptyStrToNull, booksControllers.createNewBook);
-booksRoutes.post('/:id/update', bodyEmptyStrToNull, booksControllers.updateBook);
-booksRoutes.post('/:id/delete', booksControllers.deleteBook);
+booksRoutes.post('/', authMiddleware.mustLogin, bodyEmptyStrToNull, booksControllers.createNewBook);
+booksRoutes.post('/:id/update', authMiddleware.mustLogin, bookOwnerOnly, bodyEmptyStrToNull, booksControllers.updateBook);
+booksRoutes.post('/:id/delete', authMiddleware.mustLogin, bookOwnerOnly, booksControllers.deleteBook);
 
 // PAGES
 booksRoutes.get('/', booksControllers.getBooksListPage);
-booksRoutes.get('/add', booksControllers.getCreateNewBookPage);
+booksRoutes.get('/add', authMiddleware.mustLogin, booksControllers.getCreateNewBookPage);
 booksRoutes.get('/:id', booksControllers.getBookDetailsPage);
-booksRoutes.get('/:id/update', booksControllers.getBookUpdatePage);
-booksRoutes.get('/:id/delete', booksControllers.getBookDeletePage);
+booksRoutes.get('/:id/update', authMiddleware.mustLogin, bookOwnerOnly, booksControllers.getBookUpdatePage);
+booksRoutes.get('/:id/delete', authMiddleware.mustLogin, bookOwnerOnly, booksControllers.getBookDeletePage);
 
 
 export default booksRoutes;

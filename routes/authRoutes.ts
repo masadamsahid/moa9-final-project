@@ -9,11 +9,19 @@ dotenv.config();
 const authRoutes = Router();
 
 authRoutes.get('/register', (req, res) => {
-  return res.render("register");
+  const selfUser = req.user;
+  console.log({ selfUser });
+  if (selfUser) return res.redirect("/books");
+  
+  return res.render("register", { selfUser });
 });
 
 authRoutes.get('/login', (req, res) => {
-  return res.render("login");
+  const selfUser = req.user;
+  console.log({ selfUser });
+  if (selfUser) return res.redirect("/books");
+  
+  return res.render("login", { selfUser });
 });
 
 authRoutes.post("/register", passport.authenticate("local-register", {
@@ -21,6 +29,21 @@ authRoutes.post("/register", passport.authenticate("local-register", {
   failureRedirect: "/register",
   failureFlash: true,
 }));
+
+authRoutes.post("/login", passport.authenticate("local-login", {
+  successRedirect: "/books",
+  failureRedirect: "/login",
+  failureFlash: true,
+}));
+
+authRoutes.get("/logout", (req, res, next) => {
+  req.logout((err) => {
+    if (err) {
+      throw err;
+    }
+    return res.redirect("/login");
+  });
+});
 
 // authRoutes.post('/register', async (req, res) => {
 //   const body = req.body;
