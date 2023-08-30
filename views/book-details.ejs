@@ -12,7 +12,7 @@
   <%- include('components/header') %>
   <main class="container-xl px-2 py-4">
     <div class="d-flex flex-column align-items-center gap-2 w-100">
-      <% if (selfUser && selfUser.id === book.id) { %>
+      <% if (selfUser && selfUser.id === book.author.id) { %>
         <div class="dropdown ms-auto">
           <div class="p-2 text-center fw-bold" type="button" data-bs-toggle="dropdown" aria-expanded="false">
             &hellip;
