@@ -47,11 +47,15 @@
           </div>
         </div>
         
-        <input name="img-url" type="text" placeholder="Image URL" class="form-control">
+        <input id="img-url" name="img-url" type="text" placeholder="Paste an image URL here" class="form-control" onchange="showImgPreview()">
         
         <div class="d-flex gap-2">
-          <div class="bg-dark-subtle rounded-3 p-2 flex-grow-1 d-flex justify-content-center align-items-center" style="min-height: 100%">
-            <p class="text-muted fst-italic">
+          <div
+            id="img-preview"
+            class="bg-dark-subtle rounded-3 p-2 flex-grow-1 d-flex justify-content-center align-items-center"
+            style="max-height: 100%"
+          >
+            <p id="img-placeholder" class="text-muted fst-italic">
               image preview
             </p>
           </div>
@@ -72,5 +76,30 @@
       </div>
     </form>
   </main>
+  
+  <script>
+    
+    const imgUrlElement = document.getElementById('img-url');
+    const imgPreviewElement = document.getElementById('img-preview');
+    const imgPlaceholderElement = document.getElementById('img-placeholder');
+    
+    const showImgPreview = () => {
+      console.log("changing book")
+      if (imgUrlElement.value){
+        const imgPreview = document.createElement('img');
+        // "".split(" ").forEach((c) => {
+        //   imgPreview.classList.add(c);
+        // });
+        imgPreview.style.maxWidth = '220px';
+        
+        imgPreview.src = imgUrlElement.value;
+        
+        imgPreviewElement.replaceChildren(imgPreview);
+      } else {
+        imgPreviewElement.replaceChildren(imgPlaceholderElement)
+      }
+    }
+    
+  </script>
 </body>
 </html>
