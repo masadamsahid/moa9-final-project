@@ -22,7 +22,7 @@
         <div class="d-flex gap-2">
           <input name="publisher" type="text" placeholder="Publisher" class="form-control" autocomplete="true">
           <select name="author" id="" class="form-select" style="max-width: 450px" disabled>
-            <option value="<%= selfUser.id %>">
+            <option value="<%= selfUser.id %>" selected>
               <%= selfUser.full_name %>
             </option>
           </select>

@@ -24,13 +24,10 @@
             name="publisher" type="text" placeholder="Publisher" class="form-control"
             value="<%= book.publisher %>"
           >
-          <select name="author" id="" class="form-select" style="max-width: 450px">
-            <option value="" <%= book.author?.id === null && "selected" %>>No Author</option>
-            <% authors.forEach((author) => { %>
-              <option value="<%= author.id %>" <%= author.id === book.author?.id && "selected" %> >
-                <%= author.full_name %>
-              </option>
-            <%}) %>
+          <select name="author" id="" class="form-select" style="max-width: 450px" disabled>
+            <option value="<%= selfUser.id %>" selected>
+              <%= selfUser.full_name %>
+            </option>
           </select>
         </div>
         
@@ -45,7 +42,7 @@
               class="form-control"
               type="date"
               placeholder="Published on mm/dd/yyyy"
-              value="<%= moment(new Date(book.published_at)).format("YYYY-MM-DD") %>"
+              value="<%= !book?.published_at ? "" : moment(new Date(book.published_at)).format("YYYY-MM-DD") %>"
             >
           </div>
           <div class="input-group" style="max-width: 450px">
@@ -58,13 +55,14 @@
         </div>
         
         <input
+          id="img-url"
           name="img-url" type="text" placeholder="Image URL" class="form-control"
           value="<%= book.img_url %>"
         >
         
         <div class="d-flex gap-2">
-          <div class="bg-dark-subtle rounded-3 p-2 flex-grow-1 d-flex justify-content-center align-items-center" style="min-height: 100%">
-            <p class="text-muted fst-italic">
+          <div id="img-preview" class="bg-dark-subtle rounded-3 p-2 flex-grow-1 d-flex justify-content-center align-items-center" style="min-height: 100%">
+            <p id="img-placeholder" class="text-muted fst-italic">
               image preview
             </p>
           </div>
@@ -85,5 +83,31 @@
       </div>
     </form>
   </main>
+  
+  <script>
+    
+    const imgUrlElement = document.getElementById('img-url');
+    const imgPreviewElement = document.getElementById('img-preview');
+    const imgPlaceholderElement = document.getElementById('img-placeholder');
+    
+    const showImgPreview = () => {
+      console.log("changing book")
+      if (imgUrlElement.value){
+        const imgPreview = document.createElement('img');
+        // "".split(" ").forEach((c) => {
+        //   imgPreview.classList.add(c);
+        // });
+        imgPreview.style.maxWidth = '220px';
+        
+        imgPreview.src = imgUrlElement.value;
+        
+        imgPreviewElement.replaceChildren(imgPreview);
+      } else {
+        imgPreviewElement.replaceChildren(imgPlaceholderElement)
+      }
+    }
+    showImgPreview();
+  
+  </script>
 </body>
 </html>

@@ -45,6 +45,7 @@ class BookControllers {
   }
   
   updateBook: Handler = async (req, res) => {
+    const selfUser: any = req.user;
     const id= Number(req.params.id);
     
     const book = await prisma.book.findFirst({
@@ -62,14 +63,6 @@ class BookControllers {
       body.price = Number(body.price);
       if (isNaN(body.price)) return res.status(400).send("New Price must be a number");
     }
-    if (body.author !== null) {
-      body.author = Number(body.author);
-      if (isNaN(body.author)) return res.status(400).send("Invalid new author");
-      const author = await prisma.user.findFirst({
-        where: { id: body.author },
-      });
-      if (!author) return res.status(400).send("Invalid new author");
-    }
     
     if (body?.published_at === null) delete body.published_at;
     else body.published_at = new Date(body.published_at);
@@ -81,7 +74,7 @@ class BookControllers {
         desc: body.desc,
         price: body.price,
         publisher: body.publisher,
-        author_id: body.author,
+        author_id: selfUser.id,
         img_url: body['img-url'],
         published_at: body?.published_at,
       },

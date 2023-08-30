@@ -55,11 +55,22 @@ const booksRoutes = Router();
 const authMiddleware = new AuthMiddleware();
 const booksControllers =  new BookControllers();
 
-const bookOwnerOnly: Handler = (req, res, next) => {
+const bookOwnerOnly: Handler = async (req, res, next) => {
   const selfUser: any = req.user;
-  const id = Number(req.params.id);
+  const id= Number(req.params.id);
   
-  if (selfUser.id !== id) return res.redirect(`/unauthorized`);
+  const book = await prisma.book.findFirst({
+    where: { id },
+    include: {
+      author: {
+        select: { id: true, email: true, }
+      }
+    }
+  });
+  
+  if (!book) return res.status(404).send("Target book not found");
+  
+  if (selfUser.id !== book.author?.id) return res.redirect(`/unauthorized`);
   
   return next();
 }
