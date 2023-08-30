@@ -6,6 +6,7 @@ class BookControllers {
   
   createNewBook: Handler = async (req, res) => {
     const body = req.body;
+    const selfUser: any = req.user;
     
     console.log({ body });
     
@@ -14,14 +15,14 @@ class BookControllers {
       body.price = Number(body.price);
       if (isNaN(body.price)) return res.status(400).send("Price must be a number");
     }
-    if (body.author !== null) {
-      body.author = Number(body.author);
-      if (isNaN(body.author)) return res.status(400).send("Invalid author");
-      const author = await prisma.user.findFirst({
-        where: { id: body.author },
-      });
-      if (!author) return res.status(400).send("Invalid author");
-    }
+    // if (body.author !== null) {
+    //   body.author = Number(body.author);
+    //   if (isNaN(body.author)) return res.status(400).send("Invalid author");
+    //   const author = await prisma.user.findFirst({
+    //     where: { id: body.author },
+    //   });
+    //   if (!author) return res.status(400).send("Invalid author");
+    // }
     
     if (body?.published_at === null) delete body.published_at;
     else body.published_at = new Date(body.published_at);
@@ -32,7 +33,7 @@ class BookControllers {
         desc: body.desc,
         price: body.price,
         publisher: body.publisher,
-        author_id: body.author,
+        author_id: selfUser.id,
         img_url: body['img-url'],
         published_at: body?.published_at,
       },
@@ -103,29 +104,34 @@ class BookControllers {
   
   // Pages
   getBooksListPage: Handler = async (req, res) => {
+    
+    const query = req.query;
+    const page: number = Number(query.page || 1);
+    const limit: number = Number(query.limit || 5);
+    
     const books = await prisma.book.findMany({
       include: {
         author: {
           select: { id: true, full_name: true },
         },
       },
+      skip: (page - 1) * limit,
+      take: limit,
     });
+    
+    const bookCount = await prisma.book.count();
     
     const selfUser = req.user;
     
-    console.log({ selfUser });
+    console.log({ selfUser, books, bookCount });
     
-    return res.render("books", { books, selfUser });
+    return res.render("books", { bookCount, books, selfUser, currentPage: page, limit });
   }
   
   getCreateNewBookPage: Handler = async (req, res) => {
-    const authors = await prisma.user.findMany();
-    
     const selfUser = req.user;
     
-    console.log({ selfUser });
-    
-    return res.render("add-book", { authors, selfUser });
+    return res.render("add-book", { selfUser });
   }
   
   getBookDetailsPage: Handler =  async (req, res) => {

@@ -1,7 +1,5 @@
 import { Router } from "express";
-import bcrypt from "bcrypt";
 import dotenv from "dotenv";
-import prisma from "../db/prisma";
 import passport from "passport";
 
 dotenv.config();

@@ -21,13 +21,10 @@
         
         <div class="d-flex gap-2">
           <input name="publisher" type="text" placeholder="Publisher" class="form-control" autocomplete="true">
-          <select name="author" id="" class="form-select" style="max-width: 450px">
-            <option value="" selected>Select Author</option>
-            <% authors.forEach((author) => { %>
-              <option value="<%= author.id%>">
-                <%= author.full_name %>
-              </option>
-            <%}) %>
+          <select name="author" id="" class="form-select" style="max-width: 450px" disabled>
+            <option value="<%= selfUser.id %>">
+              <%= selfUser.full_name %>
+            </option>
           </select>
         </div>
         

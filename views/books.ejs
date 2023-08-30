@@ -25,8 +25,8 @@
       <table class="table table-hover table-striped table-bordered border-dark-subtle">
         <thead>
         <tr class="text-center bg-success border-dark">
-          <% ["ID", "Name", "Author", "Desc", "Price", "Publisher", "Published", ""].forEach((col) => { %>
-          <th class="bg-transparent <%= col === "Published" ? "border-end-0" : col === "" ? "border-start-0" : "" %>">
+          <% ["#", "Name", "Author", "Desc", "Price", "Publisher", "Published At", ""].forEach((col) => { %>
+          <th class="bg-transparent <%= col === "Published At" ? "border-end-0" : col === "" ? "border-start-0" : "" %>">
             <%= col %>
           </th>
           <% }) %>
@@ -39,9 +39,10 @@
             <td colspan="8" class="text-center">No Data</td>
           </tr>
         <% } else { %>
-          <% books.forEach((book) => { %>
-            <tr class="align-middle">
-              <td class="text-center"><%= book.id %></td>
+          <% books.forEach((book, idx) => { %>
+            <tr class="align-middle text-center">
+              <td><%= ((currentPage - 1) * limit) + idx + 1 %></td>
+<!--              <td><%= book.id %></td>-->
               <td style="max-width: 200px;">
                 <a
                   class="link-success custom-link"
@@ -51,17 +52,27 @@
                 </a>
               </td>
               <td><%= book.author?.full_name || "Unknown" %></td>
-              <td style="max-width: 250px;">
+              <td class="text-start" style="max-width: 250px;">
                 <% if (!book.desc) { %>
                   <span class="fst-italic">No description.</span>
                 <% } else { %>
                   <%= book.desc.length <= 100 ? book.desc : `${book.desc.slice(0, 100)}...` %>
                 <% } %>
               </td>
-              <td class="text-center">$ <%= book.price %></td>
+              <td class="text-center">
+                <% if (book.price) { %>
+                  $ <%= book.price %>
+                <% } else { %>
+                  N/A
+                <% } %>
+              </td>
               <td><%= book.publisher || "Unknown" %></td>
               <td class="border-end-0" title="<%= moment(book.published_at).format("DD MMMM, YYYY") %>">
+                <% if (book.published_at) { %>
                 <%= moment(book.published_at).fromNow() %>
+                <% } else { %>
+                  N/A
+                <% } %>
               </td>
               <td class="border-start-0">
                 <div class="dropdown">
@@ -70,7 +81,7 @@
                   </div>
                   <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="/books/<%= book.id %>">View</a></li>
-                    <% if (selfUser?.id && book.author.id === selfUser.id ) { %>
+                    <% if (selfUser?.id && book.author?.id === selfUser.id ) { %>
                     <li><a class="dropdown-item" href="/books/<%= book.id %>/update">Update</a></li>
                     <li><a class="dropdown-item" href="/books/<%= book.id %>/delete">Delete</a></li>
                     <% } %>
@@ -81,11 +92,36 @@
           <% }) %>
         <% } %>
         </tbody>
+        <tfoot>
+        <tr class="bg-success-subtle">
+          <td class="text-center bg-success fw-bold" colspan="5">
+            Total Books: <%= bookCount || 0 %>
+          </td>
+          <td class="bg-transparent" colspan="3">
+            <div class="d-flex align-items-center justify-content-end gap-4">
+              <p class="m-0 fw-semibold" style="font-size: 14px">Current Page :</p>
+              <div class="d-flex align-items-center justify-content-center gap-2">
+                <a
+                  href="/books?page=<%= currentPage - 1 %>&limit=<%= limit %>"
+                  class="btn btn-success btn-sm <%= currentPage <= 1 && "disabled" %>"
+                >
+                  &lt;
+                </a>
+                <div class="fw-semibold p-2" style="font-size: 14px">
+                  <%= currentPage %>
+                </div>
+                <a
+                  href="/books?page=<%= currentPage + 1 %>&limit=<%= limit %>"
+                  class="btn btn-success btn-sm <%= currentPage >= Math.ceil(bookCount/limit) && "disabled" %>"
+                >
+                  &gt;
+                </a>
+              </div>
+            </div>
+          </td>
+        </tr>
+        </tfoot>
       </table>
-      
-      <h5>
-        Total: <%= books.length %> books
-      </h5>
     </div>
   </main>
   
