@@ -7,18 +7,24 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Book App</title>
   <%- include('assets/bootstrap/css') %>
+  <%- include('assets/style') %>
 </head>
 <body>
   <%- include('components/header') %>
   <main class="container-xl px-2 py-4">
     <div class="d-flex flex-column align-items-center w-100">
+      <div class="w-100 d-flex">
+        <a href="/books/add" class="btn btn-outline-success border-0 h6 m-0 ms-auto text-decoration-none fw-semibold">
+          <span class="text-white fw-bolder">+</span> Add Book
+        </a>
+      </div>
       <h1 class="fw-bolder">Books List</h1>
       
-      <table class="table table-hover table-striped table-bordered border-black">
+      <table class="table table-hover table-striped table-bordered border-dark-subtle">
         <thead>
-        <tr class="text-center bg-success">
-          <% ["ID", "Name", "Author", "Desc", "Price", "Publisher", "Published"].forEach((col) => { %>
-          <th class="bg-transparent">
+        <tr class="text-center bg-success border-dark">
+          <% ["ID", "Name", "Author", "Desc", "Price", "Publisher", "Published", ""].forEach((col) => { %>
+          <th class="bg-transparent <%= col === "Published" ? "border-end-0" : col === "" ? "border-start-0" : "" %>">
             <%= col %>
           </th>
           <% }) %>
@@ -34,22 +40,38 @@
           <% books.forEach((book) => { %>
             <tr class="align-middle">
               <td class="text-center"><%= book.id %></td>
-              <td>
+              <td style="max-width: 200px;">
                 <a
-                  class="link-success"
+                  class="link-success custom-link"
                   href="/books/<%= book.id %>"
                 >
                   <%= book.name %>
                 </a>
               </td>
-              <td><%= book.author %></td>
+              <td><%= book.author?.full_name || "Unknown" %></td>
               <td style="max-width: 250px;">
-                <%= book.desc.length <= 100 ? book.desc : `${book.desc.slice(0, 100)}...` %>
+                <% if (!book.desc) { %>
+                  <span class="fst-italic">No description.</span>
+                <% } else { %>
+                  <%= book.desc.length <= 100 ? book.desc : `${book.desc.slice(0, 100)}...` %>
+                <% } %>
               </td>
               <td class="text-center">$ <%= book.price %></td>
-              <td><%= book.publisher %></td>
-              <td title="<%= moment(book.published_at).format("DD MMMM, YYYY") %>">
+              <td><%= book.publisher || "Unknown" %></td>
+              <td class="border-end-0" title="<%= moment(book.published_at).format("DD MMMM, YYYY") %>">
                 <%= moment(book.published_at).fromNow() %>
+              </td>
+              <td class="border-start-0">
+                <div class="dropdown">
+                  <div class="p-2 text-center" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    &vellip;
+                  </div>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="/books/<%= book.id %>">View</a></li>
+                    <li><a class="dropdown-item" href="/books/<%= book.id %>/update">Update</a></li>
+                    <li><a class="dropdown-item" href="/books/<%= book.id %>/delete">Delete</a></li>
+                  </ul>
+                </div>
               </td>
             </tr>
           <% }) %>
@@ -58,9 +80,11 @@
       </table>
       
       <h5>
-        Length: <%= books.length %>
+        Total: <%= books.length %> books
       </h5>
     </div>
   </main>
+  
+  <%- include('assets/bootstrap/js') %>
 </body>
 </html>
