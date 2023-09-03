@@ -29,6 +29,7 @@ Before running this project:
 
 # Running the project
 
+## Production mode
 To run in the production mode you have to build the project first, then run the start script:
 
 ```bash
@@ -36,6 +37,7 @@ npm run build
 npm run start
 ```
 
+## Development mode
 Or you can run the project in development mode by using the build-w script and dev script
 
 ```
